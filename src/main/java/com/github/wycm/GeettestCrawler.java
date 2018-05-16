@@ -35,19 +35,18 @@ public class GeettestCrawler {
     private static String BG_IMAGE_NAME = "bg-image";
     private static int[][] moveArray = new int[52][2];
     private static boolean moveArrayInit = false;
-    private static String INDEX_URL = "https://passport.feng.com/?r=user/register";
+    private static String INDEX_URL = "https://account.ch.com/NonRegistrations-Regist";
     private static WebDriver driver;
 
     static {
         System.setProperty("webdriver.chrome.driver", "D:/dev/selenium/chromedriver_V2.30/chromedriver_win32/chromedriver.exe");
         if (!System.getProperty("os.name").toLowerCase().contains("windows")){
-            System.setProperty("webdriver.chrome.driver", "/Users/wangyang/workspace/selenium/chromedriver_V2.30/chromedriver");
+            System.setProperty("webdriver.chrome.driver", "/Users/wangyang/Downloads/chromedriver");
         }
         driver = new ChromeDriver();
     }
 
     public static void main(String[] args) throws InterruptedException {
-        for (int i = 0; i < 10; i++){
             try {
                 invoke();
             } catch (IOException e) {
@@ -55,17 +54,24 @@ public class GeettestCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
         driver.quit();
     }
     private static void invoke() throws IOException, InterruptedException {
         //设置input参数
         driver.get(INDEX_URL);
 
-        //通过[class=gt_slider_knob gt_show]
-        By moveBtn = By.cssSelector(".gt_slider_knob.gt_show");
-        waitForLoad(driver, moveBtn);
-        WebElement moveElemet = driver.findElement(moveBtn);
+        By mailReg = By.cssSelector("div[data-target=account-login]");
+        waitForLoad(driver, mailReg);
+        WebElement mailRegElement = driver.findElement(mailReg);
+        mailRegElement.click();
+        By mailInput = By.cssSelector("input[name=EmailInput]");
+        driver.findElement(mailInput).sendKeys("123456789@qq.com");
+        By pwdInput = By.cssSelector("input[name=EmailPasswordInput]");
+        driver.findElement(pwdInput).sendKeys("Aa123456789");
+        By confirmPwdInput = By.cssSelector("input[name=EmailPasswordConfirm]");
+        driver.findElement(confirmPwdInput).sendKeys("Aa123456789");
+        driver.findElement(By.cssSelector("a[id=emailRegist]")).click();
+
         int i = 0;
         while (i++ < 15){
             int distance = getMoveDistance(driver);
