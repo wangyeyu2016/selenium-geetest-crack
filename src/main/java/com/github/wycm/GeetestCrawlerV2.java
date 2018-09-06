@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class GeetestCrawlerV2 {
@@ -49,13 +50,17 @@ public class GeetestCrawlerV2 {
             //图一
             actions.clickAndHold(element).perform();
             BufferedImage image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
-            ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
-
-            element = driver.findElement(By.className("geetest_slider_button"));
-            //图二
-            actions.clickAndHold(element).perform();
-            image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
             ImageIO.write(image, "png",  new File(BASE_PATH + "slider.png"));
+
+            //设置原图可见
+            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: block')\n");
+            //图二
+            image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
+            ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
+            //隐藏原图
+            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: none')\n");
+            element = driver.findElement(By.className("geetest_slider_button"));
+            actions.clickAndHold(element).perform();
             int moveDistance = calcMoveDistince();
             int d = 0;
 
@@ -100,7 +105,6 @@ public class GeetestCrawlerV2 {
     public static List<MoveEntity> getMoveEntity(int distance){
         List<MoveEntity> list = new ArrayList<>();
         for (int i = 0 ;i < distance; i++){
-
             MoveEntity moveEntity = new MoveEntity();
             moveEntity.setX(1);
             moveEntity.setY(0);
@@ -109,10 +113,21 @@ public class GeetestCrawlerV2 {
         }
         return list;
     }
+
     static class MoveEntity{
         private int x;
         private int y;
         private int sleepTime;//毫秒
+
+        public MoveEntity(){
+
+        }
+
+        public MoveEntity(int x, int y, int sleepTime) {
+            this.x = x;
+            this.y = y;
+            this.sleepTime = sleepTime;
+        }
 
         public int getX() {
             return x;
