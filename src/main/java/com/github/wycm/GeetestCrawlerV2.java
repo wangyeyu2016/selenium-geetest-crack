@@ -49,13 +49,17 @@ public class GeetestCrawlerV2 {
             //图一
             actions.clickAndHold(element).perform();
             BufferedImage image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
-            ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
-
-            element = driver.findElement(By.className("geetest_slider_button"));
-            //图二
-            actions.clickAndHold(element).perform();
-            image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
             ImageIO.write(image, "png",  new File(BASE_PATH + "slider.png"));
+
+            //设置原图可见
+            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: block')\n");
+            //图二
+            image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
+            ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
+            //隐藏原图
+            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: none')\n");
+            element = driver.findElement(By.className("geetest_slider_button"));
+            actions.clickAndHold(element).perform();
             int moveDistance = calcMoveDistince();
             int d = 0;
 
@@ -66,7 +70,7 @@ public class GeetestCrawlerV2 {
                 Thread.sleep(moveEntity.getSleepTime());
             }
             actions.release(element).perform();
-            Thread.sleep(2 * 1000);
+            Thread.sleep(1 * 1000);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -98,21 +102,39 @@ public class GeetestCrawlerV2 {
         return null;
     }
     public static List<MoveEntity> getMoveEntity(int distance){
+        distance = distance - 2;
         List<MoveEntity> list = new ArrayList<>();
-        for (int i = 0 ;i < distance; i++){
-
+        for (int i = 0 ;i <= distance - 3; i = i + 3){
             MoveEntity moveEntity = new MoveEntity();
-            moveEntity.setX(1);
-            moveEntity.setY(0);
+            moveEntity.setX(3);
+            moveEntity.setY(1);
+            moveEntity.setSleepTime(0);
+            list.add(moveEntity);
+        }
+        if (distance % 3 > 0){
+            MoveEntity moveEntity = new MoveEntity();
+            moveEntity.setX(distance % 3);
+            moveEntity.setY(1);
             moveEntity.setSleepTime(0);
             list.add(moveEntity);
         }
         return list;
     }
+
     static class MoveEntity{
         private int x;
         private int y;
         private int sleepTime;//毫秒
+
+        public MoveEntity(){
+
+        }
+
+        public MoveEntity(int x, int y, int sleepTime) {
+            this.x = x;
+            this.y = y;
+            this.sleepTime = sleepTime;
+        }
 
         public int getX() {
             return x;
