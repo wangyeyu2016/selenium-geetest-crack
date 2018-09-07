@@ -71,7 +71,7 @@ public class GeetestCrawlerV2 {
                 Thread.sleep(moveEntity.getSleepTime());
             }
             actions.release(element).perform();
-            Thread.sleep(2 * 1000);
+            Thread.sleep(1 * 1000);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -103,11 +103,19 @@ public class GeetestCrawlerV2 {
         return null;
     }
     public static List<MoveEntity> getMoveEntity(int distance){
+        distance = distance - 2;
         List<MoveEntity> list = new ArrayList<>();
-        for (int i = 0 ;i < distance; i++){
+        for (int i = 0 ;i <= distance - 3; i = i + 3){
             MoveEntity moveEntity = new MoveEntity();
-            moveEntity.setX(1);
-            moveEntity.setY(0);
+            moveEntity.setX(3);
+            moveEntity.setY(1);
+            moveEntity.setSleepTime(0);
+            list.add(moveEntity);
+        }
+        if (distance % 3 > 0){
+            MoveEntity moveEntity = new MoveEntity();
+            moveEntity.setX(distance % 3);
+            moveEntity.setY(1);
             moveEntity.setSleepTime(0);
             list.add(moveEntity);
         }
