@@ -20,8 +20,7 @@ public class GeetestCrawlerV2 {
     private static String BASE_PATH = "";
     //开始遍历处距离左边的距离
     private static final int GEETEST_WIDTH_START_POSTION = 60;
-    //小方块距离左边界距离
-    private static int START_DISTANCE = 6;
+
     private static ChromeDriver driver = null;
     //文档截图后图片大小
     private static Point imageFullScreenSize = null;
@@ -36,41 +35,41 @@ public class GeetestCrawlerV2 {
     }
     public static void main(String[] args) {
         try {
+            for(int i = 0; i < 10; i++){
+                driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+                driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+                driver.get("https://account.geetest.com/register");
+                WebElement element = driver.findElement(By.id("email"));
+                element.sendKeys("1234567890@qq.com");
+                driver.findElement(By.className("geetest_radar_tip")).click();
+                Thread.sleep(2 * 1000);
+                Actions actions = new Actions(driver);
+                //图一
+                actions.clickAndHold(element).perform();
+                BufferedImage image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
+                ImageIO.write(image, "png",  new File(BASE_PATH + "slider.png"));
+                //设置原图可见
+                driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: block')\n");
+                //图二
+                image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
+                ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
+                //隐藏原图
+                driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: none')\n");
+                element = driver.findElement(By.className("geetest_slider_button"));
+                actions.clickAndHold(element).perform();
+                int moveDistance = calcMoveDistince();
+                int d = 0;
 
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-            driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
-
-            driver.get("https://account.geetest.com/register");
-            WebElement element = driver.findElement(By.id("email"));
-            element.sendKeys("1234567890@qq.com");
-            driver.findElement(By.className("geetest_radar_tip")).click();
-            Thread.sleep(2 * 1000);
-            Actions actions = new Actions(driver);
-            //图一
-            actions.clickAndHold(element).perform();
-            BufferedImage image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
-            ImageIO.write(image, "png",  new File(BASE_PATH + "slider.png"));
-
-            //设置原图可见
-            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: block')\n");
-            //图二
-            image = getImageEle(driver.findElement(By.className("geetest_canvas_slice")));
-            ImageIO.write(image, "png",  new File(BASE_PATH + "original.png"));
-            //隐藏原图
-            driver.executeScript("document.getElementsByClassName(\"geetest_canvas_fullbg\")[0].setAttribute('style', 'display: none')\n");
-            element = driver.findElement(By.className("geetest_slider_button"));
-            actions.clickAndHold(element).perform();
-            int moveDistance = calcMoveDistince();
-            int d = 0;
-
-            List<MoveEntity> list = getMoveEntity(moveDistance);
-            for(MoveEntity moveEntity : list){
-                actions.moveByOffset(moveEntity.getX(), moveEntity.getY()).perform();
-                System.out.println("向右总共移动了:" + (d = d + moveEntity.getX()));
-                Thread.sleep(moveEntity.getSleepTime());
+                List<MoveEntity> list = getMoveEntity(moveDistance);
+                for(MoveEntity moveEntity : list){
+                    actions.moveByOffset(moveEntity.getX(), moveEntity.getY()).perform();
+                    System.out.println("向右总共移动了:" + (d = d + moveEntity.getX()));
+                    Thread.sleep(moveEntity.getSleepTime());
+                }
+                actions.release(element).perform();
+                Thread.sleep(1 * 1000);
             }
-            actions.release(element).perform();
-            Thread.sleep(1 * 1000);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -161,6 +160,8 @@ public class GeetestCrawlerV2 {
         }
     }
     private static int calcMoveDistince() {
+        //小方块距离左边界距离
+        int START_DISTANCE = 6;
         int startWidth = (int)(GEETEST_WIDTH_START_POSTION * (imageFullScreenSize.x + 0.0f)/ htmlFullScreenSize.x);
         START_DISTANCE = (int)(START_DISTANCE * (imageFullScreenSize.x + 0.0f)/ htmlFullScreenSize.x);
         try {
