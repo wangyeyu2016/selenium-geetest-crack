@@ -1,5 +1,6 @@
 package com.github.wycm;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
@@ -8,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -101,22 +103,37 @@ public class GeetestCrawlerV2 {
         return null;
     }
     public static List<MoveEntity> getMoveEntity(int distance){
-        distance = distance - 2;
         List<MoveEntity> list = new ArrayList<>();
-        for (int i = 0 ;i <= distance - 3; i = i + 3){
+        int i = 0;
+        do {
             MoveEntity moveEntity = new MoveEntity();
-            moveEntity.setX(3);
-            moveEntity.setY(1);
-            moveEntity.setSleepTime(0);
+            int r = RandomUtils.nextInt(5, 8);
+            moveEntity.setX(r);
+            moveEntity.setY(RandomUtils.nextInt(0, 1)==1?RandomUtils.nextInt(0, 2):0-RandomUtils.nextInt(0, 2));
+            int s = 0;
+            if(i/Double.valueOf(distance)>0.05){
+            	if(i/Double.valueOf(distance)<0.85){
+            		s = RandomUtils.nextInt(2, 5);
+            	}else {
+            		s = RandomUtils.nextInt(10, 15);
+				}
+            }else{
+        		s = RandomUtils.nextInt(20, 30);
+            }
+            moveEntity.setSleepTime(s);
             list.add(moveEntity);
-        }
-        if (distance % 3 > 0){
+        	i = i + r;
+		} while (i <= distance+5);
+		boolean cc= i>distance;
+		for (int j = 0; j < Math.abs(distance-i); ) {
+			int r = RandomUtils.nextInt(1, 3);
             MoveEntity moveEntity = new MoveEntity();
-            moveEntity.setX(distance % 3);
-            moveEntity.setY(1);
-            moveEntity.setSleepTime(0);
+            moveEntity.setX(cc?-r:r);
+            moveEntity.setY(0);
+            moveEntity.setSleepTime(RandomUtils.nextInt(100, 200));
             list.add(moveEntity);
-        }
+            j = j+r;
+		}
         return list;
     }
 
