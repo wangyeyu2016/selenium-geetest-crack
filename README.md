@@ -1,5 +1,5 @@
 # 2018-09-20更新
-* 新增对腾讯滑动验证码`https://007.qq.com/online.html?ADTAG=capt.slide`的支持，本地测试通过率50左右，主要失败在计算距离上，大家有好的想法欢迎提出。
+* 新增对腾讯滑动验证码`https://007.qq.com/online.html?ADTAG=capt.slide`的支持，本地测试通过率50左右，有待优化中，主要失败在计算距离上，大家有好的想法欢迎提出。
 * Run with [TencentCrawler.java](https://github.com/wycm/selenium-geetest-crack/blob/master/src/main/java/com/github/wycm/TencentCrawler.java)
 * 腾讯滑动验证码破解的思路和极验滑动验证码略微不同，腾讯只会返回一张完整图片，导致没法通过两张图片比对的方式来计算移动距离。
 所以只能通过一张图来计算距离，这里计算的方式是通过`y轴上至少找到一条长度为30px的白线`。另外此处直接通过http请求的方式来下载的原图，此处这么做有两个原因
