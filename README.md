@@ -1,7 +1,9 @@
 # 2018-09-20更新
-* 新增对腾讯滑动验证码`https://007.qq.com/online.html?ADTAG=capt.slide`的支持，本地测试通过率50左右，有待优化中，主要失败在计算距离上(其中企鹅背景会计算失败)，大家有好的想法欢迎提出。
+* 新增对腾讯滑动验证码`https://007.qq.com/online.html?ADTAG=capt.slide`的支持，本地测试通过率70左右，有待优化中，
+主要失败在计算距离上，大家有好的想法欢迎提出。
 * Run with [TencentCrawler.java](https://github.com/wycm/selenium-geetest-crack/blob/master/src/main/java/com/github/wycm/TencentCrawler.java)
-* 腾讯滑动验证码破解的思路和极验滑动验证码略微不同，腾讯只会返回一张完整图片，导致没法通过两张图片比对的方式来计算移动距离。所以只能通过一张图来计算距离，这里计算的方式是通过`y轴上至少找到一条长度为30px的白线`。另外此处直接通过http请求的方式来下载的原图，这么做有两个原因
+* 腾讯滑动验证码破解的思路和极验滑动验证码略微不同，腾讯只会返回一张完整图片，导致没法通过两张图片比对的方式来计算移动距离。
+所以只能通过一张图来计算距离，这里计算的方式是通过`y轴上至少找到一条长度为30px的白线`。另外此处直接通过http请求的方式来下载的原图，这么做有两个原因
     1. 截图的方式会对那条关键白线的像素点有所干扰，计算的时候不太方便
     2. 返回到前端的图片并没有像极验那样对图片做混淆
 
@@ -33,9 +35,9 @@
 ## 人工验证的过程
 1. 打开威锋网注册页面（https://passport.feng.com/?r=user/register）
 2. 移动鼠标至小滑块，一张完整的图片会出现（如下图1）<br>
-![](http://images2017.cnblogs.com/blog/1133483/201708/1133483-20170803201032006-1142077110.png)
+![image](http://upload-images.jianshu.io/upload_images/5830895-7c3640f1b35893ed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 3. 点击鼠标左键，图片中间会出现一个缺块（如下图2）<br>
-![](http://images2017.cnblogs.com/blog/1133483/201708/1133483-20170803201057147-1194511710.png)
+![image](http://upload-images.jianshu.io/upload_images/5830895-ffa3e67915d5a0c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 4. 移动小滑块正上方图案至缺块处
 5. 验证通过
 
@@ -48,12 +50,11 @@
 
 ## 详细分析
 1. 打开chrome浏览器控制台，会发现图1所示的验证码图片并不是极验后台返回的原图。而是由多个div拼接而成（如下图3）<br>
-![](http://images2017.cnblogs.com/blog/1133483/201708/1133483-20170814171904490-36719192.png)
+![image](http://upload-images.jianshu.io/upload_images/5830895-dc07867df90cca3d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 通过图片显示div的style属性可知，极验后台把图片进行切割加错位处理。把素材图片切割成10 * 58大小的52张小图，再进行错位处理。在网页上显示的时候，再通过css的background-position属性对图片进行还原。以上的图1和图2都是经过了这种处理。在这种情况下，使用selenium模拟验证是需要对下载的验证码图片进行还原。如上图3的第一个div.gt_cut_fullbg_slice标签，它的大小为10px * 58px，其中style属性为```background-image: url("http://static.geetest.com/pictures/gt/969ffa43c/969ffa43c.webp"); background-position: -157px -58px;```会把该属性对应url的图片进行一个平移操作，以左上角为参考，向左平移157px，向上平移58px，图片超出部分不会显示。所以上图1所示图片是由26 * 2个10px * 58px大小的div组成（如下图4）。每一个小方块的大小58 * 10<br>
-![](http://images2017.cnblogs.com/blog/1133483/201708/1133483-20170814174552537-911156554.png)
+![image](http://upload-images.jianshu.io/upload_images/5830895-4880ad3ed5b1aef4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 2. 下载图片并还原，上一步骤分析了图片具体的混淆逻辑，具体还原图片的代码实现如下，主要逻辑是把原图裁剪为52张小图，然后拼接成一张完整的图。<br>
     ```
-    
     /**
      *还原图片
      * @param type
@@ -85,7 +86,6 @@
         new File(basePath + "result/" + type + "result1.jpg").deleteOnExit();
         new File(basePath + "result/" + type + "result2.jpg").deleteOnExit();
     }
-    
     ```
     还原过程需要注意的是，后台返回错位的图片是312 * 116大小的。而网页上图片div的大小是260 * 116。
 3. 计算平移距离，遍历图片的每一个像素点，当两张图的R、G、B之差的和大于255，说明该点的差异过大，很有可能就是需要平移到该位置的那个点，代码如下。
@@ -545,4 +545,4 @@
 ## 最后
 1. github地址:https://github.com/wycm/selenium-geetest-crack
 2. 附上一张滑动效果图<br>
- ![](http://images2017.cnblogs.com/blog/1133483/201708/1133483-20170815001340959-459369673.gif)
+ ![image](http://upload-images.jianshu.io/upload_images/5830895-c30bebcdf6827ce6.gif?imageMogr2/auto-orient/strip)

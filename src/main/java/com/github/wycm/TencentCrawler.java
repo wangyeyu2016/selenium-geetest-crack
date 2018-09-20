@@ -72,8 +72,8 @@ public class TencentCrawler {
                 driver.switchTo().frame("tcaptcha_popup");
                 String originalUrl = Jsoup.parse(driver.getPageSource()).select("[id=slideBkg]").first().attr("src");
                 System.out.println(originalUrl);
-                downloadOriginalImg(originalUrl, driver.manage().getCookies());
-                int distance = calcMoveDistance();
+                downloadOriginalImg(i, originalUrl, driver.manage().getCookies());
+                int distance = calcMoveDistance(i);
                 List<MoveEntity> list = getMoveEntity(distance);
                 element = driver.findElement(By.id("tcaptcha_drag_button"));
                 actions.clickAndHold(element).perform();
@@ -91,7 +91,7 @@ public class TencentCrawler {
         }
             driver.quit();
     }
-    private static void downloadOriginalImg(String originalUrl, Set<Cookie> cookieSet) throws IOException {
+    private static void downloadOriginalImg(int i, String originalUrl, Set<Cookie> cookieSet) throws IOException {
         CookieStore cookieStore = new BasicCookieStore();
         cookieSet.forEach( c -> {
             BasicClientCookie cookie = new BasicClientCookie(c.getName(), c.getValue());
@@ -119,7 +119,7 @@ public class TencentCrawler {
                     .build()
                     .execute(new HttpGet(originalUrl))
                     .getEntity().getContent();
-            FileUtils.copyInputStreamToFile(is, new File(BASE_PATH + "tencent-original.png"));
+            FileUtils.copyInputStreamToFile(is, new File(BASE_PATH + "tencent-original" + i + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -141,8 +141,8 @@ public class TencentCrawler {
      * y轴上至少找到一条长度为30px的白线
      * @throws IOException
      */
-    public static int calcMoveDistance() throws IOException {
-        BufferedImage fullBI = ImageIO.read(new File(BASE_PATH + "tencent-original.png"));
+    public static int calcMoveDistance(int i) throws IOException {
+        BufferedImage fullBI = ImageIO.read(new File(BASE_PATH + "tencent-original" + i + ".png"));
         for(int w = 340 ; w < fullBI.getWidth() - 18; w++){
             int whiteLineLen = 0;
             for (int h = 128; h < fullBI.getHeight() -200; h++){
