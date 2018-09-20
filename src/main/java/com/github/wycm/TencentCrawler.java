@@ -36,7 +36,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Created by wycm on 2018/9/20.
+ * selenium破解腾讯滑动验证码
+ */
 public class TencentCrawler {
     private static String BASE_PATH = "";
     //小方块距离左边界距离
@@ -140,7 +143,7 @@ public class TencentCrawler {
      */
     public static int calcMoveDistance() throws IOException {
         BufferedImage fullBI = ImageIO.read(new File(BASE_PATH + "tencent-original.png"));
-        for(int w = 22; w < fullBI.getWidth() - 18; w++){
+        for(int w = 340 ; w < fullBI.getWidth() - 18; w++){
             int whiteLineLen = 0;
             for (int h = 128; h < fullBI.getHeight() -200; h++){
                 int[] fullRgb = new int[3];

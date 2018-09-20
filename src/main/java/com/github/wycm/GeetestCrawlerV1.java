@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class GeetestCrawlerV1 {
     private static String basePath = "src/main/resources/";
     private static String FULL_IMAGE_NAME = "full-image";

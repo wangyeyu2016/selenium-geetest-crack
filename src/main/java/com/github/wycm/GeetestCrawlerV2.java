@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * selenium破解极验滑动验证码
+ */
 public class GeetestCrawlerV2 {
     private static String BASE_PATH = "";
     //开始遍历处距离左边的距离
