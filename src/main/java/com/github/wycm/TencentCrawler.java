@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class TencentCrawler {
     private static String BASE_PATH = "";
     //小方块距离左边界距离
-    private static int START_DISTANCE = 22;
+    private static int START_DISTANCE = 22 + 16;
     private static ChromeDriver driver = null;
     static {
         System.setProperty("webdriver.chrome.driver", "/Users/wangyang/Downloads/chromedriver");
@@ -69,8 +69,8 @@ public class TencentCrawler {
                 Thread.sleep(2 * 1000);
                 driver.findElement(By.id("code")).click();
                 Actions actions = new Actions(driver);
-                driver.switchTo().frame("tcaptcha_popup");
-                String originalUrl = Jsoup.parse(driver.getPageSource()).select("[id=slideBkg]").first().attr("src");
+                driver.switchTo().frame("tcaptcha_iframe");
+                String originalUrl = Jsoup.parse(driver.getPageSource()).select("[id=slideBg]").first().attr("src");
                 System.out.println(originalUrl);
                 downloadOriginalImg(i, originalUrl, driver.manage().getCookies());
                 int distance = calcMoveDistance(i);
