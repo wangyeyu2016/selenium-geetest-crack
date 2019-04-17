@@ -47,11 +47,8 @@ public class TencentCrawler {
     private static ChromeDriver driver = null;
     static {
         System.setProperty("webdriver.chrome.driver", "/Users/wangyang/Downloads/chromedriver");
-        if (System.getProperty("os.name").toLowerCase().contains("windows")){
-            System.setProperty("webdriver.chrome.driver", "D:\\dev\\selenium\\chromedriver_V2.30\\chromedriver_win32\\chromedriver.exe");
-        }
     }
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         crawl();
     }
 

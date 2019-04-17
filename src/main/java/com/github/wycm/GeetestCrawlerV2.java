@@ -75,6 +75,12 @@ public class GeetestCrawlerV2 {
             driver.quit();
         }
     }
+
+    /**
+     * 获取element的截图对应的BufferedImage对象
+     * @param ele
+     * @return
+     */
     private static BufferedImage getImageEle(WebElement ele) {
         try {
             byte[] fullPage = driver.getScreenshotAs(OutputType.BYTES);
@@ -93,8 +99,8 @@ public class GeetestCrawlerV2 {
             Point point = ele.getLocation();
             int eleWidth = (int)(ele.getSize().getWidth() / (float)element.getSize().width * (float)fullImg.getWidth());
             int eleHeight = (int) (ele.getSize().getHeight() / (float)element.getSize().height * (float)fullImg.getHeight());
-            BufferedImage eleScreenshot = fullImg.getSubimage((int)(point.getX() / (float)element.getSize().width * (float)fullImg.getWidth()), (int)(point.getY() / (float)element.getSize().height * (float)fullImg.getHeight()), eleWidth, eleHeight);
-            return eleScreenshot;
+            BufferedImage eleScreenShot = fullImg.getSubimage((int)(point.getX() / (float)element.getSize().width * (float)fullImg.getWidth()), (int)(point.getY() / (float)element.getSize().height * (float)fullImg.getHeight()), eleWidth, eleHeight);
+            return eleScreenShot;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,6 +180,11 @@ public class GeetestCrawlerV2 {
             this.sleepTime = sleepTime;
         }
     }
+
+    /**
+     * 根据original.png和slider.png计算需要移动的距离
+     * @return
+     */
     private static int calcMoveDistance() {
         //小方块距离左边界距离
         int START_DISTANCE = 6;
@@ -204,7 +215,7 @@ public class GeetestCrawlerV2 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("计算移动具体失败");
+        throw new RuntimeException("计算移动距离失败");
     }
     private static int difference(int[] a, int[] b){
         return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]);

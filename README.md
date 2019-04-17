@@ -2,6 +2,7 @@
 * 修复极验页面改版，这次采用极验官方的demo地址:https://www.geetest.com/demo/slide-bind.html
 * 截止2019-04-16，极验和腾讯的两个滑动验证码都是能保证比较高的成功率通过的
 * 如何在无界面服务器上搭建selenium运行环境，可以参考我的另一篇文章:https://www.cnblogs.com/w-y-c-m/p/10533361.html
+* 完整代码github地址见底部
 
 # 2018-09-20更新
 * 新增对腾讯滑动验证码`https://007.qq.com/online.html?ADTAG=capt.slide`的支持，本地测试通过率70左右，有待优化中，
@@ -29,9 +30,7 @@
 ## Quick Start
 1. 修改GeetestCrawlerV2中自己环境的ChromeDriver地址。
 2. Run with GeetestCrawlerV2.java
-## 最后
-* github地址:https://github.com/wycm/selenium-geetest-crack
-* 如果觉得不错，请给个star。
+
 ## 分割线以下是原文
 
 ---
@@ -555,8 +554,13 @@
 2. 附上一张滑动效果图<br>
  ![image](http://upload-images.jianshu.io/upload_images/5830895-c30bebcdf6827ce6.gif?imageMogr2/auto-orient/strip)
  
+## 最后
+* github地址:https://github.com/wycm/selenium-geetest-crack
+* 如果觉得不错，请给个star。 
+* 欢迎加入爬虫qq交流群：633925314。
+ 
 >欢迎关注我个人微信公众号
 ![一个程序员日常分享，包括但不限于爬虫、Java后端技术，欢迎关注](https://raw.githubusercontent.com/wycm/md-image/master/2019-02-28/9.png) 
 
 >欢迎加入我新开的知识星球（解答和分享各种爬虫&Java问题）
-![欢迎加入我新开的知识星球（解答和分享各种爬虫&Java问题](https://raw.githubusercontent.com/wycm/md-image/master/2019-03-14/5.png)  
+![欢迎加入我新开的知识星球（解答和分享各种爬虫&Java问题](https://raw.githubusercontent.com/wycm/md-image/master/2019-03-14/6.png)  
